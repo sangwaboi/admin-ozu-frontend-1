@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Shipment } from '@/types/shipment';
-import { api } from '@/lib/api';
+import { getBaseUrl } from '@/lib/api';
 
 export const useShipments = () => {
   const [shipments, setShipments] = useState<Shipment[]>([]);
@@ -11,8 +11,10 @@ export const useShipments = () => {
     const fetchShipments = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/shipments');
-        setShipments(response.data);
+        const response = await fetch(`${getBaseUrl()}/shipments`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        setShipments(data);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch shipments');

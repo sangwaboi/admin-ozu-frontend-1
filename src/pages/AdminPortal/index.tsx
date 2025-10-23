@@ -1,4 +1,3 @@
-import React from "react";
 import RiderMap from "./RiderMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

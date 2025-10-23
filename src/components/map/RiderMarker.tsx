@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Marker, Popup } from "react-leaflet";
 import L, { DivIcon } from "leaflet";
 import type { Rider } from "../../types/rider";
