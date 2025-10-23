@@ -1,0 +1,244 @@
+import { useState, useEffect } from 'react';
+
+interface DeliveryBoyStatusProps {
+  shipmentId: string | number;  // Accept both types
+  shipmentStatus?: string;  // The shipment status (pending, assigned, etc.)
+  onResend?: (shipmentId: number) => void;  // Resend callback
+}
+
+interface DeliveryBoyResponse {
+  riderId: string | number;  // Accept both string and number
+  riderName: string;
+  riderMobile: string;
+  status: 'pending' | 'declined' | 'accepted';
+  timestamp: string;
+}
+
+function DeliveryBoyStatus({ shipmentId, shipmentStatus, onResend }: DeliveryBoyStatusProps) {
+  const [responses, setResponses] = useState<DeliveryBoyResponse[]>([]);
+  const [acceptedRider, setAcceptedRider] = useState<DeliveryBoyResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showResend, setShowResend] = useState(false);
+
+  useEffect(() => {
+    // Reset state when shipment changes
+    setResponses([]);
+    setAcceptedRider(null);
+    setLoading(true);
+    
+    // Poll for delivery boy responses
+    const fetchResponses = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_BASE_URL}/shipments/${shipmentId}/responses`
+        );
+        
+        if (!response.ok) {
+          console.error('Failed to fetch responses:', response.status);
+          setLoading(false);
+          return;
+        }
+        
+        const data = await response.json();
+        
+        // Ensure responses is an array
+        const responsesArray = Array.isArray(data.responses) ? data.responses : [];
+        
+        setResponses(responsesArray);
+        
+        const accepted = responsesArray.find((r: any) => r.status === 'accepted');
+        if (accepted) {
+          setAcceptedRider(accepted);
+        }
+        
+        // Check if we should show resend button
+        // Show if: shipment is pending AND (no riders OR all declined)
+        if (shipmentStatus === 'pending') {
+          const allDeclined = responsesArray.length > 0 && 
+            responsesArray.every((r: any) => r.status === 'declined' || r.status === 'cancelled');
+          const noRiders = responsesArray.length === 0;
+          setShowResend(allDeclined || noRiders);
+        } else {
+          setShowResend(false);
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch delivery boy responses:', error);
+        setLoading(false);
+      }
+    };
+
+    // Initial fetch
+    fetchResponses();
+    
+    // Poll every 3 seconds until someone accepts
+    const interval = setInterval(() => {
+      if (!acceptedRider) {
+        fetchResponses();
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [shipmentId, shipmentStatus]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="flex items-center justify-center">
+          <svg className="animate-spin h-8 w-8 text-blue-600" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border">
+      <div className="px-6 py-4 border-b">
+        <h3 className="text-lg font-semibold text-gray-900">Delivery Boy Status</h3>
+        <p className="text-sm text-gray-500 mt-1">
+          {responses.length === 0 ? (
+            <span className="text-amber-600">⚠️ Waiting for backend response...</span>
+          ) : responses.length === 1 ? (
+            <span>Request sent to <strong>{responses[0].riderName}</strong> (specific rider)</span>
+          ) : (
+            <span>Request sent to {responses.length} delivery boy(s)</span>
+          )}
+        </p>
+      </div>
+
+      <div className="p-6">
+        {acceptedRider ? (
+          <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-green-900 text-lg">Accepted!</h4>
+                <p className="text-sm text-green-700 mt-1">{acceptedRider.riderName}</p>
+                <p className="text-sm text-green-600">📞 {acceptedRider.riderMobile}</p>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-green-200">
+              <p className="text-xs text-green-700">
+                ✅ Delivery boy has received full customer location and mobile number
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div>
+            {/* Show resend button if all riders declined or no riders available */}
+            {showResend && onResend && (
+              <div className="bg-amber-50 border-2 border-amber-400 rounded-lg p-4 mb-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p className="text-sm text-amber-900 font-semibold">
+                    {responses.length === 0 
+                      ? '⚠️ No delivery boys available' 
+                      : '⚠️ All riders declined or no response'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => onResend(Number(shipmentId))}
+                  className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  🔄 Resend to Available Riders
+                </button>
+              </div>
+            )}
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center gap-2">
+                <svg className="animate-pulse w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                <p className="text-sm text-yellow-800 font-medium">
+                  Waiting for delivery boy to accept...
+                </p>
+              </div>
+            </div>
+
+            {responses.length > 0 ? (
+              <div className="space-y-2">
+                {responses.map((response, index) => (
+                  <div
+                    key={`${response.riderId}-${index}`}
+                    className={`flex items-center justify-between p-3 rounded-lg border ${
+                      response.status === 'declined'
+                        ? 'bg-red-50 border-red-200'
+                        : 'bg-gray-50 border-gray-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          response.status === 'declined'
+                            ? 'bg-red-500'
+                            : 'bg-gray-400'
+                        }`}
+                      >
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {response.riderName}
+                        </p>
+                        <p className="text-xs text-gray-500">{response.riderMobile}</p>
+                      </div>
+                    </div>
+                    <div>
+                      {response.status === 'declined' ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          ❌ Declined
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700">
+                          ⏳ Pending
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <svg className="w-12 h-12 text-amber-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p className="text-sm font-medium text-gray-900 mb-1">No delivery boys found</p>
+                <p className="text-xs text-gray-500 mb-3">
+                  The backend hasn't created response records yet
+                </p>
+                <div className="text-xs text-left bg-amber-50 border border-amber-200 rounded p-3 max-w-md mx-auto">
+                  <p className="font-semibold text-amber-900 mb-2">⚠️ Backend Issue:</p>
+                  <p className="text-amber-800">
+                    When creating a shipment, the backend must create <code className="bg-amber-100 px-1 rounded">shipment_responses</code> records for each notified rider.
+                  </p>
+                  <p className="text-amber-700 mt-2 text-xs">
+                    Check console (F12) for API errors.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default DeliveryBoyStatus;
+
