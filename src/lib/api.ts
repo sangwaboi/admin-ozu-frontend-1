@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-const BASE_URL = (import.meta as any)?.env?.VITE_BACKEND_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL || "https://ozu-source-code-production.up.railway.app";
 
 /**
  * Get the current Supabase session token
