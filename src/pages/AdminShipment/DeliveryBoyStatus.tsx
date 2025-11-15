@@ -88,7 +88,7 @@ function DeliveryBoyStatus({ shipmentId, shipmentStatus }: DeliveryBoyStatusProp
         <h3 className="text-lg font-semibold text-gray-900">Delivery Boy Status</h3>
         <p className="text-sm text-gray-500 mt-1">
           {responses.length === 0 ? (
-            <span className="text-amber-600">⚠️ Waiting for backend response...</span>
+            <span className="text-amber-600"></span>
           ) : responses.length === 1 ? (
             <span>Request sent to <strong>{responses[0].riderName}</strong> (specific rider)</span>
           ) : (
@@ -120,37 +120,19 @@ function DeliveryBoyStatus({ shipmentId, shipmentStatus }: DeliveryBoyStatusProp
           </div>
         ) : (
           <div>
-            {/* Show message if no riders available */}
-            {responses.length === 0 ? (
-              <div className="bg-amber-50 border-2 border-amber-400 rounded-lg p-5 text-center">
-                <div className="flex flex-col items-center gap-3">
-                  <svg className="w-12 h-12 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <div>
-                    <p className="text-lg font-semibold text-amber-900 mb-1">
-                      ❌ No delivery boys are currently available.
-                    </p>
-                    <p className="text-sm text-amber-700">
-                      Please try again after some time.
-                    </p>
-                  </div>
-                </div>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center gap-2">
+                <svg className="animate-pulse w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                <p className="text-sm text-yellow-800 font-medium">
+                  Waiting for delivery boy to accept...
+                </p>
               </div>
-            ) : (
-              <>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <svg className="animate-pulse w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" />
-                    </svg>
-                    <p className="text-sm text-yellow-800 font-medium">
-                      Waiting for delivery boy to accept...
-                    </p>
-                  </div>
-                </div>
+            </div>
 
-                <div className="space-y-2">
+            {responses.length > 0 && (
+              <div className="space-y-2">
                   {responses.map((response, index) => (
                     <div
                       key={`${response.riderId}-${index}`}
@@ -193,7 +175,6 @@ function DeliveryBoyStatus({ shipmentId, shipmentStatus }: DeliveryBoyStatusProp
                     </div>
                   ))}
                 </div>
-              </>
             )}
           </div>
         )}
