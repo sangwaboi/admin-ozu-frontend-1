@@ -125,8 +125,8 @@ function DeliveryBoyStatus({ shipmentId, shipmentStatus }: DeliveryBoyStatusProp
                 <svg className="animate-pulse w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" />
                 </svg>
-                <p className="text-sm text-yellow-800 font-medium">
-                  Waiting for delivery boy to accept...
+                <p className="text-sm font-medium">
+                  No delivery boy Available please try after sometime
                 </p>
               </div>
             </div>
