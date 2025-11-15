@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-const BASE_URL = (import.meta as any)?.env?.VITE_BACKEND_BASE_URL || "http://localhost:8000";
+const BASE_URL = (import.meta as any)?.env?.VITE_BACKEND_BASE_URL;
 
 /**
  * Get the current Supabase session token
