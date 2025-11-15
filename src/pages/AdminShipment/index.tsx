@@ -197,6 +197,23 @@ function AdminShipment() {
       return;
     }
 
+    // Check if riders are available BEFORE creating shipment (only for broadcast)
+    if (!specificRiderId) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL || 'https://ozu-source-code-production.up.railway.app'}/riders/available`);
+        if (response.ok) {
+          const availableRiders = await response.json();
+          if (!availableRiders || availableRiders.length === 0) {
+            alert('❌ No delivery boys are currently available.\n\nPlease try again after some time.');
+            return; // Don't create shipment
+          }
+        }
+      } catch (error) {
+        console.error('Error checking available riders:', error);
+        // Continue anyway if check fails
+      }
+    }
+
     const adminLocation: AdminLocation = {
       latitude: selectedAddress.location_lat,
       longitude: selectedAddress.location_lng,
@@ -232,15 +249,7 @@ function AdminShipment() {
       setActiveShipmentIndex(newShipments.length - 1);
       setActiveShipment(data);
       
-      // Check if no riders were notified
-      if (data.notifiedRiders && data.notifiedRiders.length === 0) {
-        alert(`⚠️ Shipment #${data.id} created, but no delivery boys are currently available.\n\nThe shipment has been saved. You can resend the notification later when riders become available.`);
-      } else if (specificRiderId) {
-        alert(`✅ Shipment #${data.id} request sent to the selected delivery boy!`);
-      } else {
-        const riderCount = data.notifiedRiders?.length || 0;
-        alert(`✅ Shipment #${data.id} created! Notified ${riderCount} rider(s).`);
-      }
+      // No popup messages - silently add to list
     } catch (error: any) {
       console.error('Failed to create shipment:', error);
       
@@ -274,32 +283,6 @@ function AdminShipment() {
     }
   };
 
-  const handleResendNotification = async (shipmentId: number) => {
-    try {
-      const data = await ShipmentAPI.resendNotification(shipmentId);
-      console.log('✅ Resend response:', data);
-
-      if (data.notifiedRiders && data.notifiedRiders.length === 0) {
-        alert('⚠️ Still no delivery boys available. Please try again later.');
-      } else {
-        const riderCount = data.notifiedRiders?.length || 0;
-        alert(`✅ Notification resent to ${riderCount} rider(s)!`);
-        
-        // Refresh shipments list
-        await fetchActiveShipments();
-      }
-    } catch (error: any) {
-      console.error('Error resending notification:', error);
-      
-      if (error.message?.includes('authentication')) {
-        alert('❌ Please login to resend notifications.');
-        navigate('/login');
-        return;
-      }
-      
-      alert(`❌ ${error.message || 'Failed to resend notification. Please try again.'}`);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -552,7 +535,6 @@ function AdminShipment() {
                 <DeliveryBoyStatus 
                   shipmentId={activeShipment.id}
                   shipmentStatus={activeShipment.status}
-                  onResend={handleResendNotification}
                 />
                 <LiveTrackingMap
                   adminLocation={selectedAddress ? {
