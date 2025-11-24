@@ -2,7 +2,7 @@ export interface Shipment {
   id: string;
   trackingNumber: string;
   riderId?: string;
-  status: 'pending' | 'assigned' | 'in_transit' | 'delivered' | 'cancelled';
+  status: 'pending' | 'assigned' | 'picked_up' | 'in_transit' | 'delivered' | 'cancelled';
   pickupLocation: {
     lat: number;
     lng: number;
@@ -23,6 +23,6 @@ export interface Shipment {
   updatedAt?: string;
 }
 
-export type ShipmentStatus = 'pending' | 'assigned' | 'in_transit' | 'delivered' | 'cancelled';
+export type ShipmentStatus = 'pending' | 'assigned' | 'picked_up' | 'in_transit' | 'delivered' | 'cancelled';
 
 

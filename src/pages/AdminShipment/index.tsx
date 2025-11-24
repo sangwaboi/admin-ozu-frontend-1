@@ -125,11 +125,18 @@ function AdminShipment() {
           });
         }
         
-        // Check for newly accepted shipments
+        // Check for status changes
         data.forEach((newShipment: any) => {
           const oldShipment = previousShipments.find(s => s.id === newShipment.id);
-          if (oldShipment && oldShipment.status === 'pending' && newShipment.status === 'assigned') {
-            showNotification(`✅ Shipment #${newShipment.id} has been accepted!`);
+          if (oldShipment) {
+            // Accepted notification
+            if (oldShipment.status === 'pending' && newShipment.status === 'assigned') {
+              showNotification(`✅ Shipment #${newShipment.id} has been accepted!`);
+            }
+            // Picked up notification
+            if (oldShipment.status === 'assigned' && newShipment.status === 'picked_up') {
+              showNotification(`📦 Shipment #${newShipment.id} has been picked up!`);
+            }
           }
         });
         
@@ -483,11 +490,14 @@ function AdminShipment() {
                         >
                           <div className="flex items-center gap-2">
                             <span>Shipment #{shipment.id}</span>
-                            {shipment.status === 'assigned' && (
-                              <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                            )}
                             {shipment.status === 'pending' && (
-                              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" title="Waiting for rider"></span>
+                            )}
+                            {shipment.status === 'assigned' && (
+                              <span className="w-2 h-2 bg-green-400 rounded-full" title="Accepted - Waiting for pickup"></span>
+                            )}
+                            {shipment.status === 'picked_up' && (
+                              <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" title="Picked up - On the way"></span>
                             )}
                           </div>
                         </button>
@@ -567,6 +577,7 @@ function AdminShipment() {
               <>
                 <RiderStatus 
                   shipmentId={activeShipment.id}
+                  shipmentStatus={activeShipment.status}
                 />
                 <LiveTrackingMap
                   adminLocation={selectedAddress ? {
