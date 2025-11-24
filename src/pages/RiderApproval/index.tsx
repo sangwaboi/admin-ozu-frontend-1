@@ -13,6 +13,7 @@ export default function RiderApprovalPage() {
   const [selectedRider, setSelectedRider] = useState<PendingRider | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedName, setEditedName] = useState('');
+  const [processingRiders, setProcessingRiders] = useState<Set<string | number>>(new Set());
 
   // Fetch riders data
   const fetchRiders = async () => {
@@ -42,12 +43,23 @@ export default function RiderApprovalPage() {
 
   // Approve rider
   const handleApprove = async (riderId: string | number) => {
+    // Prevent multiple clicks
+    if (processingRiders.has(riderId)) return;
+    
+    setProcessingRiders(prev => new Set(prev).add(riderId));
+    
     try {
       await RidersAPI.approve(riderId);
       fetchRiders(); // Refresh list
     } catch (error) {
       console.error('Error approving rider:', error);
       alert('❌ Failed to approve rider');
+    } finally {
+      setProcessingRiders(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(riderId);
+        return newSet;
+      });
     }
   };
 
@@ -65,6 +77,11 @@ export default function RiderApprovalPage() {
     }
 
     if (!selectedRider) return;
+    
+    // Prevent multiple clicks
+    if (processingRiders.has(selectedRider.id)) return;
+    
+    setProcessingRiders(prev => new Set(prev).add(selectedRider.id));
 
     try {
       await RidersAPI.approve(selectedRider.id, editedName);
@@ -73,17 +90,34 @@ export default function RiderApprovalPage() {
     } catch (error) {
       console.error('Error approving rider:', error);
       alert('❌ Failed to approve rider');
+    } finally {
+      setProcessingRiders(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(selectedRider.id);
+        return newSet;
+      });
     }
   };
 
   // Reject rider
   const handleReject = async (riderId: string | number) => {
+    // Prevent multiple clicks
+    if (processingRiders.has(riderId)) return;
+    
+    setProcessingRiders(prev => new Set(prev).add(riderId));
+    
     try {
       await RidersAPI.reject(riderId);
       fetchRiders(); // Refresh list
     } catch (error) {
       console.error('Error rejecting rider:', error);
       alert('❌ Failed to reject rider');
+    } finally {
+      setProcessingRiders(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(riderId);
+        return newSet;
+      });
     }
   };
 
@@ -149,11 +183,16 @@ export default function RiderApprovalPage() {
             onApprove={handleApprove}
             onApproveWithEdit={handleApproveWithEdit}
             onReject={handleReject}
+            processingRiders={processingRiders}
           />
         )}
 
         {activeTab === 'approved' && (
-          <ApprovedRidersTab riders={approvedRiders} onRemove={handleReject} />
+          <ApprovedRidersTab 
+            riders={approvedRiders} 
+            onRemove={handleReject}
+            processingRiders={processingRiders}
+          />
         )}
       </div>
 
@@ -195,9 +234,10 @@ interface PendingRidersTabProps {
   onApprove: (riderId: string | number) => void;
   onApproveWithEdit: (rider: PendingRider) => void;
   onReject: (riderId: string | number) => void;
+  processingRiders: Set<string | number>;
 }
 
-function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject }: PendingRidersTabProps) {
+function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject, processingRiders }: PendingRidersTabProps) {
   if (riders.length === 0) {
     return (
       <div className="empty-state">
@@ -239,20 +279,43 @@ function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject }: Pe
             <button
               onClick={() => onApprove(rider.id)}
               className="btn-approve"
+              disabled={processingRiders.has(rider.id)}
             >
-              ✅ Approve
+              {processingRiders.has(rider.id) ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 inline-block mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                '✅ Approve'
+              )}
             </button>
             <button
               onClick={() => onApproveWithEdit(rider)}
               className="btn-edit"
+              disabled={processingRiders.has(rider.id)}
             >
               ✏️ Edit & Approve
             </button>
             <button
               onClick={() => onReject(rider.id)}
               className="btn-reject"
+              disabled={processingRiders.has(rider.id)}
             >
-              ❌ Reject
+              {processingRiders.has(rider.id) ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 inline-block mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                '❌ Reject'
+              )}
             </button>
           </div>
         </div>
@@ -267,9 +330,10 @@ function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject }: Pe
 interface ApprovedRidersTabProps {
   riders: ApprovedRider[];
   onRemove: (riderId: string | number) => void;
+  processingRiders: Set<string | number>;
 }
 
-function ApprovedRidersTab({ riders, onRemove }: ApprovedRidersTabProps) {
+function ApprovedRidersTab({ riders, onRemove, processingRiders }: ApprovedRidersTabProps) {
   if (riders.length === 0) {
     return (
       <div className="empty-state">
@@ -322,8 +386,19 @@ function ApprovedRidersTab({ riders, onRemove }: ApprovedRidersTabProps) {
             <button
               onClick={() => onRemove(rider.id)}
               className="btn-remove"
+              disabled={processingRiders.has(rider.id)}
             >
-              🗑️ Remove Rider
+              {processingRiders.has(rider.id) ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 inline-block mr-1" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Removing...
+                </>
+              ) : (
+                '🗑️ Remove Rider'
+              )}
             </button>
           </div>
         </div>
