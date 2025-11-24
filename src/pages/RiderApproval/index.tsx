@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RidersAPI } from '@/lib/api';
 import type { PendingRider, ApprovedRider } from '@/types/riderApproval';
 import './index.css';
 
 export default function RiderApprovalPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'pending' | 'approved'>('pending');
   const [pendingRiders, setPendingRiders] = useState<PendingRider[]>([]);
   const [approvedRiders, setApprovedRiders] = useState<ApprovedRider[]>([]);
@@ -39,16 +41,9 @@ export default function RiderApprovalPage() {
   }, []);
 
   // Approve rider
-  const handleApprove = async (riderId: string | number, riderName: string) => {
-    const confirmApprove = window.confirm(
-      `Approve rider: ${riderName}?\n\nThey will start receiving delivery requests.`
-    );
-    
-    if (!confirmApprove) return;
-
+  const handleApprove = async (riderId: string | number) => {
     try {
       await RidersAPI.approve(riderId);
-      alert('✅ Rider approved successfully!');
       fetchRiders(); // Refresh list
     } catch (error) {
       console.error('Error approving rider:', error);
@@ -73,7 +68,6 @@ export default function RiderApprovalPage() {
 
     try {
       await RidersAPI.approve(selectedRider.id, editedName);
-      alert('✅ Rider approved successfully!');
       setShowEditModal(false);
       fetchRiders();
     } catch (error) {
@@ -83,16 +77,9 @@ export default function RiderApprovalPage() {
   };
 
   // Reject rider
-  const handleReject = async (riderId: string | number, riderName: string) => {
-    const confirmReject = window.confirm(
-      `Reject rider: ${riderName}?\n\nThis will delete their account permanently.`
-    );
-    
-    if (!confirmReject) return;
-
+  const handleReject = async (riderId: string | number) => {
     try {
       await RidersAPI.reject(riderId);
-      alert('❌ Rider rejected and removed');
       fetchRiders(); // Refresh list
     } catch (error) {
       console.error('Error rejecting rider:', error);
@@ -117,8 +104,21 @@ export default function RiderApprovalPage() {
   return (
     <div className="riders-approval-page">
       <div className="page-header">
-        <h1>🏍️ Riders Management</h1>
-        <p>Approve or reject delivery riders</p>
+        <div className="header-content">
+          <button
+            onClick={() => navigate('/shipment')}
+            className="back-button"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back
+          </button>
+          <div>
+            <h1>🏍️ Riders Management</h1>
+            <p>Approve or reject delivery riders</p>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -192,9 +192,9 @@ export default function RiderApprovalPage() {
 // -------------------------
 interface PendingRidersTabProps {
   riders: PendingRider[];
-  onApprove: (riderId: string | number, riderName: string) => void;
+  onApprove: (riderId: string | number) => void;
   onApproveWithEdit: (rider: PendingRider) => void;
-  onReject: (riderId: string | number, riderName: string) => void;
+  onReject: (riderId: string | number) => void;
 }
 
 function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject }: PendingRidersTabProps) {
@@ -237,7 +237,7 @@ function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject }: Pe
 
           <div className="rider-actions">
             <button
-              onClick={() => onApprove(rider.id, rider.name)}
+              onClick={() => onApprove(rider.id)}
               className="btn-approve"
             >
               ✅ Approve
@@ -249,7 +249,7 @@ function PendingRidersTab({ riders, onApprove, onApproveWithEdit, onReject }: Pe
               ✏️ Edit & Approve
             </button>
             <button
-              onClick={() => onReject(rider.id, rider.name)}
+              onClick={() => onReject(rider.id)}
               className="btn-reject"
             >
               ❌ Reject
