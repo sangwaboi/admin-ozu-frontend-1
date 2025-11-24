@@ -7,7 +7,7 @@ import type { AdminAddress } from '../../types/address';
 import AddressSelector from '../../components/AddressSelector';
 import ShipmentForm from './ShipmentForm';
 import LiveTrackingMap from './LiveTrackingMap';
-import DeliveryBoyStatus from './DeliveryBoyStatus';
+import RiderStatus from './RiderStatus';
 import { LogOut } from 'lucide-react';
 import { useIssues } from '../../hooks/useIssues';
 
@@ -249,7 +249,7 @@ function AdminShipment() {
     console.log('📤 Request payload:', JSON.stringify(shipmentRequest, null, 2));
 
     try {
-      // Call API to create shipment and notify delivery boy(s)
+      // Call API to create shipment and notify rider(s)
       const data = await ShipmentAPI.create(shipmentRequest);
       console.log('✅ Shipment created:', data);
       
@@ -385,7 +385,7 @@ function AdminShipment() {
             {/* Admin Mobile Number */}
             <div className="pt-3 border-t border-blue-200">
               <label className="block text-sm font-medium text-blue-900 mb-2">
-                Your Mobile Number (Shared with delivery boy) <span className="text-red-500">*</span>
+                Your Mobile Number (Shared with rider) <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
@@ -532,7 +532,7 @@ function AdminShipment() {
                             </div>
                           </div>
 
-                          {/* Delivery Boy Details */}
+                          {/* Rider Details */}
                           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
                             <p className="text-xs font-semibold text-blue-700 uppercase mb-2">🏍️ Delivered By</p>
                             <div className="space-y-1 text-sm text-gray-700">
@@ -565,7 +565,7 @@ function AdminShipment() {
             {/* Active Shipment Details - Only show on Active tab */}
             {currentTab === 'active' && activeShipment && (
               <>
-                <DeliveryBoyStatus 
+                <RiderStatus 
                   shipmentId={activeShipment.id}
                 />
                 <LiveTrackingMap

@@ -219,7 +219,7 @@ export default function AdminProfile() {
                 placeholder="+91 XXXXX XXXXX"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-              <p className="text-xs text-gray-500 mt-1">Shared with delivery boys</p>
+              <p className="text-xs text-gray-500 mt-1">Shared with riders</p>
             </div>
 
             {/* Your Name */}

@@ -51,9 +51,9 @@ export default function IssueCard({ issue, onUpdate }: IssueCardProps) {
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <p className="text-sm font-medium text-gray-700">🚴 Delivery Boy</p>
-            <p className="text-sm text-gray-900">{issue.deliveryBoyName}</p>
-            <p className="text-sm text-gray-600">📞 {issue.deliveryBoyMobile}</p>
+            <p className="text-sm font-medium text-gray-700">🚴 Rider</p>
+            <p className="text-sm text-gray-900">{issue.riderName}</p>
+            <p className="text-sm text-gray-600">📞 {issue.riderMobile}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-gray-700">👤 Customer</p>

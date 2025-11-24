@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { IssuesAPI } from '@/lib/api';
 import type { ShipmentIssue } from '@/types/issue';
 
-interface DeliveryBoyStatusProps {
+interface RiderStatusProps {
   shipmentId: string | number;  // Accept both types
 }
 
-interface DeliveryBoyResponse {
+interface RiderResponse {
   riderId: string | number;  // Accept both string and number
   riderName: string;
   riderMobile: string;
@@ -15,10 +15,10 @@ interface DeliveryBoyResponse {
   timestamp: string;
 }
 
-function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
+function RiderStatus({ shipmentId }: RiderStatusProps) {
   const navigate = useNavigate();
-  const [responses, setResponses] = useState<DeliveryBoyResponse[]>([]);
-  const [acceptedRider, setAcceptedRider] = useState<DeliveryBoyResponse | null>(null);
+  const [responses, setResponses] = useState<RiderResponse[]>([]);
+  const [acceptedRider, setAcceptedRider] = useState<RiderResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [shipmentIssues, setShipmentIssues] = useState<ShipmentIssue[]>([]);
 
@@ -29,7 +29,7 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
     setLoading(true);
     setShipmentIssues([]);
     
-    // Poll for delivery boy responses
+    // Poll for rider responses
     const fetchResponses = async () => {
       try {
         const response = await fetch(
@@ -56,7 +56,7 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
         
         setLoading(false);
       } catch (error) {
-        console.error('Failed to fetch delivery boy responses:', error);
+        console.error('Failed to fetch rider responses:', error);
         setLoading(false);
       }
     };
@@ -105,14 +105,14 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border">
       <div className="px-6 py-4 border-b">
-        <h3 className="text-lg font-semibold text-gray-900">Delivery Boy Status</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Rider Status</h3>
         <p className="text-sm text-gray-500 mt-1">
           {responses.length === 0 ? (
             <span className="text-amber-600"></span>
           ) : responses.length === 1 ? (
             <span>Request sent to <strong>{responses[0].riderName}</strong> (specific rider)</span>
           ) : (
-            <span>Request sent to {responses.length} delivery boy(s)</span>
+            <span>Request sent to {responses.length} rider(s)</span>
           )}
         </p>
       </div>
@@ -135,7 +135,7 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
               </div>
               <div className="mt-3 pt-3 border-t border-green-200">
                 <p className="text-xs text-green-700">
-                  ✅ Delivery boy has received full customer location and mobile number
+                  ✅ Rider has received full customer location and mobile number
                 </p>
               </div>
             </div>
@@ -190,7 +190,7 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                   <p className="text-sm font-medium text-amber-900">
-                    No delivery boy available, please try after sometime
+                    No rider available, please try after sometime
                   </p>
                 </div>
               </div>
@@ -202,7 +202,7 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
                       <circle cx="12" cy="12" r="10" />
                     </svg>
                     <p className="text-sm text-yellow-800 font-medium">
-                      Waiting for delivery boy to accept...
+                      Waiting for rider to accept...
                     </p>
                   </div>
                 </div>
@@ -261,5 +261,5 @@ function DeliveryBoyStatus({ shipmentId }: DeliveryBoyStatusProps) {
   );
 }
 
-export default DeliveryBoyStatus;
+export default RiderStatus;
 

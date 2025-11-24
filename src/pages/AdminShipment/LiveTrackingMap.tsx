@@ -148,7 +148,7 @@ function LiveTrackingMap({ adminLocation, shipment }: LiveTrackingMapProps) {
           </div>
           <div className="flex items-center gap-1">
             <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-            <span className="text-gray-600">Delivery Boy</span>
+            <span className="text-gray-600">Rider</span>
           </div>
         </div>
       </div>
@@ -206,7 +206,7 @@ function LiveTrackingMap({ adminLocation, shipment }: LiveTrackingMapProps) {
             >
               <Popup>
                 <div className="text-sm">
-                  <strong className="text-green-600">Delivery Boy</strong>
+                  <strong className="text-green-600">Rider</strong>
                   <p className="text-xs text-gray-600 mt-1">On the way...</p>
                 </div>
               </Popup>

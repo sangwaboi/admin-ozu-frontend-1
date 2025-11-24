@@ -1,9 +1,9 @@
 export interface ShipmentIssue {
   id: number;
   shipmentId: number;
-  deliveryBoyId: number;
-  deliveryBoyName: string;
-  deliveryBoyMobile: string;
+  riderId: number;
+  riderName: string;
+  riderMobile: string;
   issueType: string;
   reportedAt: string;
   adminResponse: 'redeliver' | 'return_to_shop' | null;

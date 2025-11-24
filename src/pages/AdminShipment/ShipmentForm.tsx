@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CustomerDetails } from './index';
 import LocationSearchInput, { LocationResult } from '../../components/LocationSearchInput';
 
-interface DeliveryBoy {
+interface Rider {
   id: string;
   name: string;
   mobile: string;
@@ -27,7 +27,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
 
   const [errors, setErrors] = useState<Partial<Record<keyof CustomerDetails, string>>>({});
   const [showRiderModal, setShowRiderModal] = useState(false);
-  const [deliveryBoys, setDeliveryBoys] = useState<DeliveryBoy[]>([]);
+  const [riders, setRiders] = useState<Rider[]>([]);
   const [loadingRiders, setLoadingRiders] = useState(false);
   const [selectedRider, setSelectedRider] = useState<string | null>(null);
   const [customerLocationDisplay, setCustomerLocationDisplay] = useState<string>('');
@@ -87,15 +87,15 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const fetchDeliveryBoys = async () => {
+  const fetchRiders = async () => {
     setLoadingRiders(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/riders/available`);
       const data = await response.json();
-      setDeliveryBoys(data);
+      setRiders(data);
     } catch (error) {
-      console.error('Failed to fetch delivery boys:', error);
-      alert('Failed to load delivery boys. Please try again.');
+      console.error('Failed to fetch riders:', error);
+      alert('Failed to load riders. Please try again.');
     } finally {
       setLoadingRiders(false);
     }
@@ -122,13 +122,13 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
 
   const handleSpecificRiderClick = () => {
     if (!validate()) return;
-    fetchDeliveryBoys();
+    fetchRiders();
     setShowRiderModal(true);
   };
 
   const handleSendToSpecificRider = () => {
     if (!selectedRider) {
-      alert('Please select a delivery boy');
+      alert('Please select a rider');
       return;
     }
     
@@ -252,7 +252,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
             }`}
           />
           {errors.price && <p className="text-xs text-red-600 mt-1">{errors.price}</p>}
-          <p className="text-xs text-gray-500 mt-1">Amount delivery boy will receive</p>
+          <p className="text-xs text-gray-500 mt-1">Amount rider will receive</p>
         </div>
 
         {/* Submit Buttons */}
@@ -275,7 +275,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                Send to Available Delivery Boys
+                Send to Available Riders
               </>
             )}
           </button>
@@ -289,17 +289,17 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            Send to Specific Delivery Boy
+            Send to Specific Rider
           </button>
         </div>
       </form>
 
-      {/* Delivery Boy Selection Modal */}
+      {/* Rider Selection Modal */}
       {showRiderModal && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden relative z-[10000]">
             <div className="px-6 py-4 border-b flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Select Delivery Boy</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Select Rider</h3>
               <button
                 onClick={() => {
                   setShowRiderModal(false);
@@ -321,16 +321,16 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
                 </div>
-              ) : deliveryBoys.length === 0 ? (
+              ) : riders.length === 0 ? (
                 <div className="text-center py-8">
                   <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
-                  <p className="text-gray-500">No available delivery boys</p>
+                  <p className="text-gray-500">No available riders</p>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {deliveryBoys.map((rider) => (
+                  {riders.map((rider) => (
                     <div
                       key={rider.id}
                       onClick={() => setSelectedRider(rider.id)}

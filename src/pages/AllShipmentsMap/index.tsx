@@ -371,7 +371,7 @@ function AllShipmentsMap() {
                   </Marker>
                 )}
 
-                {/* Delivery Boy Marker */}
+                {/* Rider Marker */}
                 {shipment.acceptedRider && (
                   <Marker
                     position={[shipment.acceptedRider.location.lat, shipment.acceptedRider.location.lng]}
@@ -379,7 +379,7 @@ function AllShipmentsMap() {
                   >
                     <Popup maxWidth={300}>
                       <div className="text-sm">
-                        <div className="font-bold text-green-600 mb-2">Delivery Boy</div>
+                        <div className="font-bold text-green-600 mb-2">Rider</div>
                         <div className="space-y-1">
                           <p className="text-xs"><strong>Name:</strong> {shipment.acceptedRider.name}</p>
                           <p className="text-xs"><strong>Mobile:</strong> {shipment.acceptedRider.mobile}</p>
@@ -436,7 +436,7 @@ function AllShipmentsMap() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                <span className="text-gray-700">Delivery Boy</span>
+                <span className="text-gray-700">Rider</span>
               </div>
             </div>
           </div>
