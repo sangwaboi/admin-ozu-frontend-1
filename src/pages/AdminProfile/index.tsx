@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import AddressManager from '../../components/AddressManager';
-import { ArrowLeft, Save, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
+import { ArrowLeft, Save, CheckCircle, AlertCircle, LogOut, QrCode } from 'lucide-react';
 
 interface AdminProfile {
   mobile: string;
@@ -249,6 +249,30 @@ export default function AdminProfile() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <p className="text-xs text-gray-500 mt-1">Optional - for your reference</p>
+            </div>
+          </div>
+
+          {/* Tenant Settings Section */}
+          <div className="border-t pt-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Shop Join Code</h2>
+            <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-blue-900 font-medium mb-1">
+                    Share your join code with riders
+                  </p>
+                  <p className="text-xs text-blue-700">
+                    Riders can join your shop by sending a WhatsApp message with your unique code.
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/tenant-settings')}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 font-medium transition-colors whitespace-nowrap"
+                >
+                  <QrCode className="h-4 w-4" />
+                  View Join Code
+                </button>
+              </div>
             </div>
           </div>
 

@@ -9,6 +9,7 @@ import AllShipmentsMap from '@/pages/AllShipmentsMap';
 import AdminProfile from '@/pages/AdminProfile';
 import AdminIssues from '@/pages/AdminIssues';
 import RiderApproval from '@/pages/RiderApproval';
+import TenantSettings from '@/pages/TenantSettings';
 
 function App() {
   return (
@@ -73,6 +74,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <RiderApproval />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tenant-settings"
+            element={
+              <ProtectedRoute>
+                <TenantSettings />
               </ProtectedRoute>
             }
           />

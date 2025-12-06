@@ -190,3 +190,37 @@ export const IssuesAPI = {
   },
 };
 
+// Tenant endpoints
+export const TenantAPI = {
+  // Get tenant info for current admin
+  getMyTenant: async () => {
+    const response = await authenticatedFetch('/admin/tenant');
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null; // Tenant not found
+      }
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    return response.json();
+  },
+  
+  // Create a new tenant (called during admin signup)
+  create: async (name: string, joinCode: string) => {
+    const response = await authenticatedFetch('/tenants', {
+      method: 'POST',
+      body: JSON.stringify({
+        name,
+        join_code: joinCode,
+        is_active: true,
+      }),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
+      throw new Error(errorData.detail || `${response.status} ${response.statusText}`);
+    }
+    
+    return response.json();
+  },
+};
+

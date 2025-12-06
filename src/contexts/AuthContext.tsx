@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { TenantAPI } from '../lib/api';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, mobile: string, name: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, mobile: string, name: string, shopName?: string) => Promise<{ error: AuthError | null }>;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
@@ -39,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, mobile: string, name: string) => {
+  const signUp = async (email: string, password: string, mobile: string, name: string, shopName?: string) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -54,18 +55,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) return { error };
 
-      // Create admin profile
-      if (data.user) {
-        const { error: profileError } = await supabase
-          .from('admin_profiles')
-          .insert({
-            user_id: data.user.id,
-            mobile,
-            name,
-          });
+      // Create tenant and admin profile
+      if (data.user && data.session) {
+        try {
+          // Generate unique join code
+          const generateJoinCode = () => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+              code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+          };
 
-        if (profileError) {
-          console.error('Error creating profile:', profileError);
+          const joinCode = generateJoinCode();
+          const tenantName = shopName || name || 'My Shop';
+
+          // Create tenant via backend API
+          const tenant = await TenantAPI.create(tenantName, joinCode);
+
+          // Create admin profile with tenant_id
+          const { error: profileError } = await supabase
+            .from('admin_profiles')
+            .insert({
+              user_id: data.user.id,
+              mobile,
+              name,
+              shop_name: shopName || null,
+              tenant_id: tenant.id,
+            });
+
+          if (profileError) {
+            console.error('Error creating profile:', profileError);
+            // Don't fail signup if profile creation fails - tenant is already created
+          }
+        } catch (tenantError) {
+          console.error('Error creating tenant:', tenantError);
+          // If tenant creation fails, still create admin profile without tenant_id
+          // The admin can set up tenant later
+          const { error: profileError } = await supabase
+            .from('admin_profiles')
+            .insert({
+              user_id: data.user.id,
+              mobile,
+              name,
+              shop_name: shopName || null,
+            });
+
+          if (profileError) {
+            console.error('Error creating profile:', profileError);
+          }
         }
       }
 
