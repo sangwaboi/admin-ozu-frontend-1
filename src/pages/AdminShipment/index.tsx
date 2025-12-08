@@ -336,13 +336,13 @@ function AdminShipment() {
 
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Toast Notifications */}
       <div className="fixed top-4 right-4 z-50 space-y-2">
         {notifications.map((notification, index) => (
           <div
             key={index}
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md flex items-center gap-3 animate-slide-in"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-slide-in"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -353,20 +353,20 @@ function AdminShipment() {
       </div>
 
       {/* Header */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500">
         <div className="max-w-7xl mx-auto px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900">Admin Shipment Portal</h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <h1 className="text-2xl font-bold text-white">Admin Shipment Portal</h1>
+              <p className="text-sm text-white/70 mt-1">
                 {adminName ? `Welcome, ${adminName}` : 'Create and manage delivery requests'}
               </p>
             </div>
             {/* Navigation Pills */}
-            <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm p-1 rounded-xl border border-white/20">
               <button
                 onClick={() => navigate('/profile')}
-                className="px-4 py-2 text-gray-600 rounded-md hover:bg-white hover:shadow-sm flex items-center gap-2 font-medium transition-all"
+                className="px-4 py-2 text-white/80 rounded-lg hover:bg-white/20 flex items-center gap-2 font-medium transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -375,10 +375,10 @@ function AdminShipment() {
               </button>
               <button
                 onClick={() => navigate('/issues')}
-                className={`px-4 py-2 rounded-md flex items-center gap-2 font-medium transition-all relative ${
+                className={`px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-all relative ${
                   issueCounts.pending > 0
-                    ? 'bg-white shadow-sm text-red-600'
-                    : 'text-gray-600 hover:bg-white hover:shadow-sm'
+                    ? 'bg-white text-red-600'
+                    : 'text-white/80 hover:bg-white/20'
                 }`}
                 title={issueCounts.pending > 0 ? `${issueCounts.pending} issue(s) need attention` : 'View issues'}
               >
@@ -394,7 +394,7 @@ function AdminShipment() {
               </button>
               <button
                 onClick={() => navigate('/riders')}
-                className="px-4 py-2 text-gray-600 rounded-md hover:bg-white hover:shadow-sm flex items-center gap-2 font-medium transition-all"
+                className="px-4 py-2 text-white/80 rounded-lg hover:bg-white/20 flex items-center gap-2 font-medium transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -404,7 +404,7 @@ function AdminShipment() {
               <button
                 onClick={() => navigate('/map')}
                 disabled={!adminMobile || !selectedAddress}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed flex items-center gap-2 font-medium transition-all shadow-sm"
+                className="px-4 py-2 bg-white text-violet-600 rounded-lg hover:bg-white/90 disabled:bg-white/30 disabled:text-white/50 disabled:cursor-not-allowed flex items-center gap-2 font-semibold transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -413,7 +413,7 @@ function AdminShipment() {
               </button>
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 text-gray-600 rounded-md hover:bg-white hover:shadow-sm flex items-center gap-2 font-medium transition-all"
+                className="px-4 py-2 text-white/80 rounded-lg hover:bg-white/20 flex items-center gap-2 font-medium transition-all"
               >
                 <LogOut className="h-4 w-4" />
                 Sign Out
@@ -422,7 +422,7 @@ function AdminShipment() {
           </div>
 
           {/* Admin Location & Mobile */}
-          <div className="mt-5 bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+          <div className="mt-5 bg-white rounded-2xl p-5 shadow-lg">
             {/* Address Selector */}
             <AddressSelector
               selectedAddress={selectedAddress}
@@ -439,11 +439,11 @@ function AdminShipment() {
                 value={adminMobile}
                 onChange={(e) => setAdminMobile(e.target.value)}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
                 readOnly
               />
               <p className="text-xs text-gray-400 mt-2">
-                Update in <button onClick={() => navigate('/profile')} className="text-blue-500 hover:text-blue-600">Profile Settings</button>
+                Update in <button onClick={() => navigate('/profile')} className="text-violet-600 hover:text-violet-700 font-medium">Profile Settings</button>
               </p>
             </div>
           </div>
@@ -464,14 +464,14 @@ function AdminShipment() {
           {/* Right: Tracking & Status */}
           <div className="space-y-6">
             {/* Shipments Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               {/* Tab Headers */}
               <div className="flex border-b border-gray-100">
                 <button
                   onClick={() => handleTabSwitch('active')}
                   className={`flex-1 px-6 py-3.5 font-medium text-sm transition-all ${
                     currentTab === 'active'
-                      ? 'text-blue-500 border-b-2 border-blue-500 bg-white'
+                      ? 'text-violet-600 border-b-2 border-violet-600 bg-white'
                       : 'text-gray-500 hover:text-gray-700 bg-gray-50'
                   }`}
                 >
@@ -482,7 +482,7 @@ function AdminShipment() {
                     Active Shipments
                     {allShipments.length > 0 && (
                       <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                        currentTab === 'active' ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-600'
+                        currentTab === 'active' ? 'bg-violet-100 text-violet-600' : 'bg-gray-200 text-gray-600'
                       }`}>
                         {allShipments.length}
                       </span>
@@ -493,7 +493,7 @@ function AdminShipment() {
                   onClick={() => handleTabSwitch('completed')}
                   className={`flex-1 px-6 py-3.5 font-medium text-sm transition-all ${
                     currentTab === 'completed'
-                      ? 'text-blue-500 border-b-2 border-blue-500 bg-white'
+                      ? 'text-violet-600 border-b-2 border-violet-600 bg-white'
                       : 'text-gray-500 hover:text-gray-700 bg-gray-50'
                   }`}
                 >
@@ -504,7 +504,7 @@ function AdminShipment() {
                     Completed
                     {completedShipments.length > 0 && (
                       <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                        currentTab === 'completed' ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-600'
+                        currentTab === 'completed' ? 'bg-violet-100 text-violet-600' : 'bg-gray-200 text-gray-600'
                       }`}>
                         {completedShipments.length}
                       </span>
@@ -522,9 +522,9 @@ function AdminShipment() {
                         <button
                           key={shipment.id}
                           onClick={() => handleShipmentSwitch(index)}
-                          className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-all relative ${
+                          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all relative ${
                             activeShipmentIndex === index
-                              ? 'bg-blue-500 text-white shadow-sm'
+                              ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-md'
                               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                           }`}
                         >
@@ -547,7 +547,7 @@ function AdminShipment() {
                               )}
                             </div>
                             {shipment.status === 'picked_up' && (
-                              <span className={`text-xs ${activeShipmentIndex === index ? 'text-blue-100' : 'text-blue-500'}`}>On the way</span>
+                              <span className={`text-xs ${activeShipmentIndex === index ? 'text-violet-100' : 'text-violet-500'}`}>On the way</span>
                             )}
                             {shipmentIssues[shipment.id] && (
                               <span className={`text-xs ${activeShipmentIndex === index ? 'text-amber-100' : 'text-red-500'}`}>
@@ -572,11 +572,11 @@ function AdminShipment() {
                   {completedShipments.length > 0 ? (
                     <div className="space-y-3">
                       {completedShipments.map((shipment) => (
-                        <div key={shipment.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div key={shipment.id} className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <h4 className="font-medium text-gray-900">Shipment #{shipment.id}</h4>
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-600">
                                 Delivered
                               </span>
                             </div>

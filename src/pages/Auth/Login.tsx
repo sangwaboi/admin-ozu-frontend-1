@@ -26,31 +26,30 @@ export default function Login() {
       setError(error.message);
       setLoading(false);
     } else {
-      // Successful login, navigate to intended page
       navigate(from, { replace: true });
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-500 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500 rounded-xl mb-4 shadow-sm">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl mb-4 border border-white/30">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-semibold text-gray-900">Ozu Admin</h1>
-          <p className="text-gray-500 mt-2">Sign in to manage deliveries</p>
+          <h1 className="text-3xl font-bold text-white">Ozu Admin</h1>
+          <p className="text-white/70 mt-2">Sign in to manage deliveries</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Welcome back</h2>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-800">{error}</p>
             </div>
@@ -70,7 +69,7 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@example.com"
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors bg-gray-50"
                 />
               </div>
             </div>
@@ -88,13 +87,13 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors bg-gray-50"
                 />
               </div>
               <div className="flex justify-end mt-2">
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-blue-500 hover:text-blue-600 font-medium"
+                  className="text-sm text-violet-600 hover:text-violet-700 font-medium"
                 >
                   Forgot password?
                 </Link>
@@ -105,7 +104,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full py-3.5 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold rounded-xl hover:from-violet-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg shadow-violet-500/30"
             >
               {loading ? (
                 <>
@@ -125,7 +124,7 @@ export default function Login() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-500 hover:text-blue-600 font-medium">
+              <Link to="/signup" className="text-violet-600 hover:text-violet-700 font-medium">
                 Sign up
               </Link>
             </p>
@@ -133,14 +132,10 @@ export default function Login() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-400 mt-8">
+        <p className="text-center text-sm text-white/60 mt-8">
           © 2025 Ozu Admin. All rights reserved.
         </p>
       </div>
     </div>
   );
 }
-
-
-
-

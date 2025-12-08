@@ -70,11 +70,11 @@ export default function AddressSelector({ selectedAddress, onAddressChange }: Ad
 
   if (addresses.length === 0) {
     return (
-      <div className="p-5 bg-gray-50 border border-gray-200 rounded-lg text-center">
+      <div className="p-5 bg-gray-50 border border-gray-200 rounded-xl text-center">
         <p className="text-sm text-gray-500 mb-3">No addresses found</p>
         <button
           onClick={() => navigate('/profile')}
-          className="text-sm text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
+          className="text-sm text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 px-4 py-2 rounded-xl font-medium transition-all shadow-lg shadow-violet-500/30"
         >
           Add Address in Profile
         </button>
@@ -90,7 +90,7 @@ export default function AddressSelector({ selectedAddress, onAddressChange }: Ad
         </label>
         <button
           onClick={() => navigate('/profile')}
-          className="text-xs text-blue-500 hover:text-blue-600"
+          className="text-xs text-violet-600 hover:text-violet-700 font-medium"
         >
           Manage Addresses
         </button>
@@ -99,10 +99,10 @@ export default function AddressSelector({ selectedAddress, onAddressChange }: Ad
       {/* Dropdown Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-3 bg-white border border-gray-200 rounded-lg flex items-center justify-between hover:border-blue-500 transition-colors"
+        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between hover:border-violet-500 transition-colors"
       >
         <div className="flex items-center gap-2 flex-1 text-left">
-          <MapPin className="w-5 h-5 text-blue-600 flex-shrink-0" />
+          <MapPin className="w-5 h-5 text-violet-600 flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-900 truncate">
               {selectedAddress?.address_name || 'Select Address'}

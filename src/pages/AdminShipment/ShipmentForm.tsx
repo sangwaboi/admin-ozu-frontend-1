@@ -167,7 +167,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-2xl shadow-sm p-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-5">Create Delivery Request</h2>
       
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -208,7 +208,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="John Doe"
-            className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors bg-gray-50 ${
               errors.name ? 'border-red-400' : 'border-gray-200'
             }`}
           />
@@ -225,7 +225,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
             value={formData.mobile}
             onChange={(e) => handleChange('mobile', e.target.value)}
             placeholder="+91 XXXXX XXXXX"
-            className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors bg-gray-50 ${
               errors.mobile ? 'border-red-400' : 'border-gray-200'
             }`}
           />
@@ -258,7 +258,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
             placeholder="50"
             min="0"
             step="10"
-            className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors bg-gray-50 ${
               errors.price ? 'border-red-400' : 'border-gray-200'
             }`}
           />
@@ -271,7 +271,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
           <button
             type="submit"
             disabled={disabled}
-            className="w-full py-3 px-4 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-sm"
+            className="w-full py-3.5 px-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold rounded-xl hover:from-violet-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg shadow-violet-500/30"
           >
             {disabled ? (
               <>
@@ -294,7 +294,7 @@ function ShipmentForm({ onSubmit, disabled }: ShipmentFormProps) {
             type="button"
             onClick={handleSpecificRiderClick}
             disabled={disabled}
-            className="w-full py-3 px-4 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
