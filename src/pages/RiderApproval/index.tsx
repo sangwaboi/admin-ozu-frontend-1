@@ -147,24 +147,58 @@ export default function RiderApprovalPage() {
           <button onClick={() => navigate('/shipment')}>
             <ArrowLeft />
           </button>
-          <h1 className="text-[38px] font-semibold">ozu</h1>
+         {/* OZU LOGO */}
+<div className="w-[109px] h-[46px] flex items-center">
+  <img
+    src="/ozu-logo.png"
+    alt="OZU"
+    className="h-[32px] w-auto object-contain"
+  />
+</div>
+
         </div>
 
 
-  <button
-    type="button"
+ <button
     onClick={() => navigate('/profile')}
-    className="profile-btn"
+    className="w-[46px] h-[46px] rounded-full border border-black overflow-hidden"
   >
-   <img
-            src="/ava2.png"
-            alt="Profile"
-            className="w-10 h-10 rounded-full border"
-          />
+    <img
+      src="/ava2.png"
+      alt="Profile"
+      className="w-full h-full object-cover"
+    />
   </button>
 </header>
 
 
+
+<div className="px-4 mt-3">
+  <h2
+    className="
+      text-[20px]
+      font-bold
+      leading-[120%]
+      tracking-[-0.02em]
+      text-[#111111]
+    "
+  >
+    Rider Management
+  </h2>
+
+  <p
+    className="
+      mt-[2px]
+      text-[14px]
+      font-medium
+      leading-[130%]
+      tracking-[-0.01em]
+      text-[#5F5F5F]
+    "
+  >
+    Approve or reject delivery riders
+  </p>
+</div>
 
 
 
@@ -209,40 +243,48 @@ export default function RiderApprovalPage() {
           />
         )}
       </div>
-       {/* ================= BOTTOM NAV ================= */}
-      <nav className="fixed bottom-0 left-0 right-0 h-[76px] bg-white border-t flex justify-around items-center text-xs">
-        <button
-          onClick={() => navigate('/shipment')}
-          className="flex flex-col items-center"
-        >
-          <Home />
-          HOME
-        </button>
+          {/* ===== BOTTOM NAV (FIGMA EXACT) ===== */}
+<nav className="fixed bottom-0 left-0 right-0 z-50 h-[76px] bg-white rounded-t-2xl shadow-[0_-1px_12px_rgba(0,0,0,0.11)]">
+  <div className="max-w-[439px] mx-auto h-full flex justify-around items-center">
+    
+    {/* HOME */}
+    <button
+      onClick={() => navigate('/shipment')}
+      className="flex flex-col items-center justify-center text-[11px] font-medium text-[#2B2B2B]"
+    >
+      <Home size={22} strokeWidth={1.8} />
+      <span className="mt-1">HOME</span>
+    </button>
 
-        <button
-         onClick={() => navigate('/issues')}
-          className="flex flex-col items-center"
-        >
-          <AlertTriangle />
-          ISSUES
-        </button  >
+    {/* ISSUES (ACTIVE SAMPLE) */}
+    <button
+      onClick={() => navigate('/issues')}
+      className="flex flex-col items-center justify-center text-[11px] font-medium text-[#2B2B2B]"
+    >
+      <AlertTriangle size={22} strokeWidth={1.8} />
+      <span className="mt-1">ISSUES</span>
+    </button>
 
-        <button
-          onClick={() => navigate('/map')}
-          className="flex flex-col items-center"
-        >
-          <Map />
-          MAP
-        </button>
+    {/* MAP */}
+    <button
+      onClick={() => navigate('/map')}
+      className="flex flex-col items-center justify-center text-[11px] font-medium text-[#2B2B2B]"
+    >
+      <Map size={22} strokeWidth={1.8} />
+      <span className="mt-1">MAP</span>
+    </button>
 
-        <button
-          onClick={() => navigate('/riders')}
-         className="flex flex-col items-center text-black font-semibold"
-        >
-          <Bike />
-          RIDERS
-        </button>
-      </nav>
+    {/* RIDERS */}
+    <button
+      onClick={() => navigate('/riders')}
+      className="flex flex-col items-center justify-center text-[11px] font-medium text-[#2B2B2B]"
+    >
+      <Bike size={22} strokeWidth={1.8} />
+      <span className="mt-1">RIDERS</span>
+    </button>
+
+  </div>
+</nav>
 
       {/* Edit Name Modal */}
       {showEditModal && selectedRider && (
@@ -250,14 +292,24 @@ export default function RiderApprovalPage() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Edit Rider Name</h2>
             <div className="form-group">
-              <label>Current: {selectedRider.name}</label>
-              <input
-                type="text"
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                placeholder="Enter rider name"
-                className="name-input"
-              />
+            <div className="mt-4">
+  <label className="block text-sm font-medium text-gray-700">
+    Rider Full Name
+  </label>
+
+  <input
+    type="text"
+    value={editedName}
+    onChange={(e) => setEditedName(e.target.value)}
+    placeholder="Eg: Aditya Shrivastav"
+    className="name-input mt-1"
+  />
+
+  <p className="mt-1 text-[12px] text-gray-400">
+    This name will be visible to customers and used for deliveries.
+  </p>
+</div>
+
             </div>
             <div className="modal-actions">
               <button onClick={() => setShowEditModal(false)} className="cancel-btn">
@@ -397,21 +449,21 @@ function ApprovedRidersTab({ riders, onRemove, processingRiders }: ApprovedRider
       {riders.map(rider => (
         <div key={rider.id} className="rider-card approved">
           <div className="rider-header">
-            <div className="rider-avatar approved">
-              {rider.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="rider-info">
-              <h3>{rider.name}</h3>
-              <p className="contact">{rider.contact}</p>
-            </div>
-            <div className="status-badge">
-              {rider.isAvailable ? (
-                <span className="available">🟢 Available</span>
-              ) : (
-                <span className="unavailable">🔴 Busy</span>
-              )}
-            </div>
-          </div>
+  <div className="flex items-center gap-3">
+    <div className="rider-avatar approved">
+      {rider.name.charAt(0).toUpperCase()}
+    </div>
+
+    <div className="rider-info">
+      <h3>{rider.name}</h3>
+      <p className="contact">{rider.contact}</p>
+      <p className="wa-id">Joined: {new Date(rider.createdAt).toLocaleDateString()}</p>
+    </div>
+  </div>
+
+  <span className="busy-badge">Busy</span>
+</div>
+
 
           <div className="rider-details">
             <div className="detail-row">

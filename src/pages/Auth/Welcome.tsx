@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import './welcome.css';
 
@@ -8,7 +8,12 @@ export default function Welcome() {
       <div className="welcome-container">
 
         {/* OZU TEXT (NOT LOGO IMAGE) */}
-        <div className="welcome-brand">OZU</div>
+       <img
+  src="/ozu-logo.png"
+  alt="OZU"
+  className="welcome-logo"
+/>
+
 
         {/* TAGLINE TEXT */}
         <p className="welcome-text">

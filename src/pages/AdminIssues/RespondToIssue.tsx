@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { ShipmentIssue } from '@/types/issue';
 import { IssuesAPI } from '@/lib/api';
+import {
+  Repeat,
+  RotateCcw,
+  ChevronDown,
+} from 'lucide-react';
 
 interface RespondToIssueProps {
   issue: ShipmentIssue;
@@ -8,7 +13,8 @@ interface RespondToIssueProps {
 }
 
 export default function RespondToIssue({ issue, onSuccess }: RespondToIssueProps) {
-  const [action, setAction] = useState<'redeliver' | 'return_to_shop'>('redeliver');
+  const [action, setAction] =
+    useState<'redeliver' | 'return_to_shop'>('redeliver');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,33 +50,99 @@ export default function RespondToIssue({ issue, onSuccess }: RespondToIssueProps
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-3 bg-[#F3F8FF] rounded-xl p-4 space-y-3 border"
+      className="
+        bg-white
+        rounded-[20px]
+        border border-[#E6E6E6]
+        p-5
+        space-y-4
+      "
     >
-      {/* ACTION */}
-      <select
-        value={action}
-        onChange={(e) =>
-          setAction(e.target.value as 'redeliver' | 'return_to_shop')
-        }
-        className="w-full h-[44px] rounded-lg border px-3 text-sm focus:outline-none"
-      >
-        <option value="redeliver">🔄 Re-deliver to Customer</option>
-        <option value="return_to_shop">↩️ Return to Shop</option>
-      </select>
+      {/* HEADER */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-[16px] font-semibold text-[#1F1F24]">
+          Respond to issue
+        </h3>
+
+        <p className="text-[13px] font-medium text-[#6B6B6F]">
+          Shipment #{issue.shipmentId}
+        </p>
+      </div>
+
+      {/* ACTION SELECT */}
+      <div className="relative">
+        <select
+          value={action}
+          onChange={(e) =>
+            setAction(e.target.value as 'redeliver' | 'return_to_shop')
+          }
+          className="
+            w-full
+            h-[52px]
+            appearance-none
+            rounded-[14px]
+            border-2 border-[#8C8C91]
+            px-4 pr-10
+            text-[15px]
+            font-medium
+            focus:outline-none
+          "
+        >
+          <option value="redeliver">Re-deliver to customer</option>
+          <option value="return_to_shop">Return to shop</option>
+        </select>
+
+        {/* LEFT ICON */}
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1F1F24]">
+          {action === 'redeliver' ? (
+            <Repeat size={18} />
+          ) : (
+            <RotateCcw size={18} />
+          )}
+        </div>
+
+        {/* RIGHT ICON */}
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#1F1F24]">
+          <ChevronDown size={18} />
+        </div>
+      </div>
 
       {/* MESSAGE */}
-      <textarea
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Instructions for rider"
-        rows={3}
-        className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
-        required
-      />
+      <div>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Instructions for the Rider"
+          rows={4}
+          className="
+            w-full
+            rounded-[14px]
+            border border-[#C9CBD1]
+            px-4 py-3
+            text-[14px]
+            resize-none
+            focus:outline-none
+          "
+          required
+        />
+
+        <p className="mt-1 text-[12px] text-[#8C8C91]">
+          Example: Visit customer after 2pm
+        </p>
+      </div>
 
       {/* ERROR */}
       {error && (
-        <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+        <div
+          className="
+            rounded-lg
+            bg-red-50
+            border border-red-200
+            px-3 py-2
+            text-[12px]
+            text-red-600
+          "
+        >
           {error}
         </div>
       )}
@@ -79,9 +151,34 @@ export default function RespondToIssue({ issue, onSuccess }: RespondToIssueProps
       <button
         type="submit"
         disabled={loading}
-        className="w-full h-[42px] rounded-lg bg-[#2563EB] text-white font-semibold disabled:opacity-60"
+        className="
+          w-full
+          h-[52px]
+          rounded-[16px]
+          bg-[#FFCA28]
+          text-[16px]
+          font-semibold
+          text-black
+          disabled:opacity-60
+        "
       >
         {loading ? 'Sending…' : 'Send Instructions'}
+      </button>
+
+      {/* CANCEL */}
+      <button
+        type="button"
+        onClick={onSuccess}
+        className="
+          w-full
+          text-center
+          text-[14px]
+          font-medium
+          text-[#8C8C91]
+          pt-1
+        "
+      >
+        Cancel
       </button>
     </form>
   );
