@@ -44,11 +44,6 @@ export default function AddressManager() {
     await loadAddresses();
   };
 
-  const handleSetDefault = async (id: string) => {
-    await AddressAPI.setDefault(id);
-    await loadAddresses();
-  };
-
   if (isLoading) {
     return (
       <div className="py-6 text-center text-sm text-gray-500">
@@ -62,22 +57,22 @@ export default function AddressManager() {
 
        {/* HEADER */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold">My Addresses</h3>
+        <h3 className="text-[14px] font-semibold text-[#1F1F24]">
+          My Addresses
+        </h3>
 
-        {/* ADD BUTTON — SOURCE OF TRUTH */}
         <button
           onClick={() => {
             setEditingAddress(null);
             setShowAddModal(true);
           }}
           className="
-            flex items-center gap-1
-            text-sm
+            flex items-center gap-1.5
+            text-[13px]
             px-3 py-2
             rounded-xl
-            border
-            border-[#EAE6E6]
-            bg-[#F3F3F3]
+            border border-[#E6E6E6]
+            bg-[#F4F4F4]
           "
         >
           <Plus className="w-4 h-4" />
@@ -91,26 +86,17 @@ export default function AddressManager() {
           key={address.id}
           className="
             w-full
-            rounded-[16px]
-            border
-            border-[#E3E3E3]
-            bg-[#F5F5F5]
-            p-4
+            rounded-[18px]
+            border border-[#E6E6E6]
+            bg-[#FAFAFA]
+            px-4 py-3.5
           "
         >
-          {/* TITLE + DEFAULT BADGE */}
+          {/* TITLE + DEFAULT */}
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2 leading-none">
-              <MapPin className="w-4 h-4 text-green-600" />
-
-              <p
-                className="
-                  text-sm
-                  font-semibold
-                  text-[#2F2F33]
-                  leading-[120%]
-                "
-              >
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-green-700" />
+              <p className="text-[14px] font-semibold text-[#1F1F24]">
                 {address.address_name}
               </p>
             </div>
@@ -119,10 +105,9 @@ export default function AddressManager() {
               <span
                 className="
                   rounded-full
-                  bg-[#F3F3F3]
-                  px-2
-                  py-[2px]
-                  text-[10px]
+                  bg-[#FFE9E9]
+                  px-2.5 py-[3px]
+                  text-[11px]
                   font-medium
                   text-[#E53935]
                 "
@@ -133,37 +118,44 @@ export default function AddressManager() {
           </div>
 
           {/* ADDRESS */}
-          <p className="mt-1 text-xs text-gray-600">
+          <p className="mt-1 text-[13px] leading-[18px] text-[#6B6B6F]">
             {address.location_address}
           </p>
 
           {/* ACTIONS */}
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 flex gap-3">
             <button
               onClick={() => {
                 setEditingAddress(address);
                 setShowAddModal(true);
               }}
-              className="h-9 w-[72px] rounded-lg bg-black text-white text-xs"
+              className="
+                h-[40px]
+                w-[110px]
+                rounded-xl
+                bg-black
+                text-white
+                text-[13px]
+                font-medium
+              "
             >
               Edit
             </button>
 
             <button
               onClick={() => handleDeleteAddress(address.id)}
-              className="h-9 w-[72px] rounded-lg bg-red-600 text-white text-xs"
+              className="
+                h-[40px]
+                w-[110px]
+                rounded-xl
+                bg-[#E53935]
+                text-white
+                text-[13px]
+                font-medium
+              "
             >
               Delete
             </button>
-
-            {!address.is_default && (
-              <button
-                onClick={() => handleSetDefault(address.id)}
-                className="ml-auto text-xs text-gray-500 hover:underline"
-              >
-                Set default
-              </button>
-            )}
           </div>
         </div>
       ))}
@@ -283,3 +275,4 @@ function AddressModal({ address, onSave, onClose }: AddressModalProps) {
     </div>
   );
 }
+

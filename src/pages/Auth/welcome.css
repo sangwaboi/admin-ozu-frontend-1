@@ -106,3 +106,14 @@
   margin-left: 4px;
   text-decoration: underline;
 }
+.welcome-logo {
+  width: 109px;
+  height: 63px;
+  margin: 0 auto 12px; /* EXACT same as .welcome-brand */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  object-fit: contain;
+}

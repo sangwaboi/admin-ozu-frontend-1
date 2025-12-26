@@ -173,6 +173,33 @@ export default function RiderApprovalPage() {
 
 
 
+<div className="px-4 mt-3">
+  <h2
+    className="
+      text-[20px]
+      font-bold
+      leading-[120%]
+      tracking-[-0.02em]
+      text-[#111111]
+    "
+  >
+    Rider Management
+  </h2>
+
+  <p
+    className="
+      mt-[2px]
+      text-[14px]
+      font-medium
+      leading-[130%]
+      tracking-[-0.01em]
+      text-[#5F5F5F]
+    "
+  >
+    Approve or reject delivery riders
+  </p>
+</div>
+
 
 
 
@@ -265,14 +292,24 @@ export default function RiderApprovalPage() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Edit Rider Name</h2>
             <div className="form-group">
-              <label>Current: {selectedRider.name}</label>
-              <input
-                type="text"
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                placeholder="Enter rider name"
-                className="name-input"
-              />
+            <div className="mt-4">
+  <label className="block text-sm font-medium text-gray-700">
+    Rider Full Name
+  </label>
+
+  <input
+    type="text"
+    value={editedName}
+    onChange={(e) => setEditedName(e.target.value)}
+    placeholder="Eg: Aditya Shrivastav"
+    className="name-input mt-1"
+  />
+
+  <p className="mt-1 text-[12px] text-gray-400">
+    This name will be visible to customers and used for deliveries.
+  </p>
+</div>
+
             </div>
             <div className="modal-actions">
               <button onClick={() => setShowEditModal(false)} className="cancel-btn">
@@ -412,21 +449,21 @@ function ApprovedRidersTab({ riders, onRemove, processingRiders }: ApprovedRider
       {riders.map(rider => (
         <div key={rider.id} className="rider-card approved">
           <div className="rider-header">
-            <div className="rider-avatar approved">
-              {rider.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="rider-info">
-              <h3>{rider.name}</h3>
-              <p className="contact">{rider.contact}</p>
-            </div>
-            <div className="status-badge">
-              {rider.isAvailable ? (
-                <span className="available">🟢 Available</span>
-              ) : (
-                <span className="unavailable">🔴 Busy</span>
-              )}
-            </div>
-          </div>
+  <div className="flex items-center gap-3">
+    <div className="rider-avatar approved">
+      {rider.name.charAt(0).toUpperCase()}
+    </div>
+
+    <div className="rider-info">
+      <h3>{rider.name}</h3>
+      <p className="contact">{rider.contact}</p>
+      <p className="wa-id">Joined: {new Date(rider.createdAt).toLocaleDateString()}</p>
+    </div>
+  </div>
+
+  <span className="busy-badge">Busy</span>
+</div>
+
 
           <div className="rider-details">
             <div className="detail-row">
