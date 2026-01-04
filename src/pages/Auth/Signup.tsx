@@ -6,7 +6,6 @@ import {
   Lock,
   AlertCircle,
   Loader2,
-  UserPlus,
   User,
   Phone,
   Store,
@@ -224,6 +223,7 @@ function Input({
   onChange,
   type = 'text',
   rightIcon,
+  ...rest
 }: {
   icon: React.ReactNode;
   placeholder: string;
@@ -231,7 +231,7 @@ function Input({
   onChange: (v: string) => void;
   type?: string;
   rightIcon?: React.ReactNode;
-}) {
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'type' | 'value' | 'placeholder'>) {
   return (
     <div className="w-full h-[58px] rounded-[20px] border border-[#E0E0E0] px-4 flex items-center gap-3 bg-white">
       <div className="text-[#9E9E9E]">{icon}</div>
@@ -241,6 +241,7 @@ function Input({
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
         className="flex-1 outline-none text-[14px]"
+        {...rest}
       />
       {rightIcon && <div>{rightIcon}</div>}
     </div>
